@@ -137,6 +137,43 @@ void touching(touchPosition touch)
         }
 }
 
+void checkWin()
+{
+        if(pressedSquares[0] == pressedSquares[1] && pressedSquares[1] == pressedSquares[2] && pressedSquares[0] != 0)
+        {
+                win = true;
+        }
+        else if(pressedSquares[3] == pressedSquares[4] && pressedSquares[4] == pressedSquares[5] && pressedSquares[3] != 0)
+        {
+                win = true;
+        }
+        else if(pressedSquares[6] == pressedSquares[7] && pressedSquares[7] == pressedSquares[8] && pressedSquares[6] != 0)
+        {
+                win = true;
+        }
+        else if(pressedSquares[0] == pressedSquares[3] && pressedSquares[3] == pressedSquares[6] && pressedSquares[0] != 0)
+        {
+                win = true;
+        }
+        else if(pressedSquares[1] == pressedSquares[4] && pressedSquares[4] == pressedSquares[7] && pressedSquares[1] != 0)
+        {
+                win = true;
+        }
+        else if(pressedSquares[2] == pressedSquares[5] && pressedSquares[5] == pressedSquares[8] && pressedSquares[2] != 0)
+        {
+                win = true;
+        }
+        else if(pressedSquares[0] == pressedSquares[4] && pressedSquares[4] == pressedSquares[8] && pressedSquares[0] != 0)
+        {
+                win = true;
+        }
+        else if(pressedSquares[2] == pressedSquares[4] && pressedSquares[4] == pressedSquares[6] && pressedSquares[2] != 0)
+        {
+                win = true;
+        }
+        
+}
+
 int main(int argc, char **argv) {
 
 	romfsInit();
@@ -153,7 +190,7 @@ int main(int argc, char **argv) {
         while (aptMainLoop())
         {
                 hidScanInput();
-                
+
                 touchPosition touch;
                 hidTouchRead(&touch);
         
@@ -162,17 +199,51 @@ int main(int argc, char **argv) {
 
                 C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
                 C2D_TargetClear(top, C2D_Color32(0x00, 0x00, 0x00, 0xFF));
-                C2D_SceneBegin(top);
-                drawGridTopScreen();
-                drawWhoseMove();
-                drawMoves(1);
                 C2D_TargetClear(bottom, C2D_Color32(0x09, 0x00, 0x00, 0xFF));
-                C2D_SceneBegin(bottom);
-                drawGridBottomScreen();
-                drawMoves(2);
-                //check if touched
-                if(touch.px != 0 && touch.py != 0)
-                        touching(touch);
+                if(!win)
+                {
+                        C2D_SceneBegin(top);
+                        drawGridTopScreen();
+                        drawWhoseMove();
+                        drawMoves(1);
+                        C2D_SceneBegin(bottom);
+                        drawGridBottomScreen();
+                        drawMoves(2);
+                        //check if touched
+                        if(touch.px != 0 && touch.py != 0)
+                                touching(touch);
+                        checkWin();
+                }
+                else
+                {
+                        C2D_SceneBegin(top);
+                        C2D_Text text;
+                        C2D_TextBuf buf = C2D_TextBufNew(4096);
+                        if(player == 1)
+                        {
+                                C2D_TextParse(&text, buf, "O wins!");
+                                C2D_TextOptimize(&text);
+                                C2D_DrawText(&text, C2D_WithColor, 10, 200, 0, 0.5f, 0.5f, C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF));
+                        }
+                        else
+                        {
+                                C2D_TextParse(&text, buf, "X wins!");
+                                C2D_TextOptimize(&text);
+                                C2D_DrawText(&text, C2D_WithColor, 10, 200, 0, 0.5f, 0.5f, C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF));
+                        }
+                        C2D_TextBufDelete(buf);
+                        C2D_SceneBegin(bottom);
+                        //press A to restart
+                        if(kHeld & KEY_A)
+                        {
+                                player = 1;
+                                win = false;
+                                for(int i = 0; i < 9; i++)
+                                {
+                                        pressedSquares[i] = 0;
+                                }
+                        }
+                }
 		C3D_FrameEnd(0);
         }
         C2D_Fini();
