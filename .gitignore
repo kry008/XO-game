@@ -41,3 +41,6 @@ build/
 source/*.old
 source/*.o
 source/main.c.old
+
+
+*.lst
