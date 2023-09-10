@@ -9,6 +9,8 @@ int player = 1; //1 - X 2 - O
 bool win = false;
 bool all9 = false;
 int pressedSquares[9] = {0,0,0,0,0,0,0,0,0};
+int winCount[2] = {0,0};
+bool addedWin = false;
 
 C3D_RenderTarget* top;
 C3D_RenderTarget* bottom;
@@ -91,6 +93,7 @@ void drawMoves(int display)
 
 void touching(touchPosition touch)
 {
+        addedWin = false;
         if(touch.px < 106 && touch.py < 80 && pressedSquares[0] == 0)
         {
                 pressedSquares[0] = player;
@@ -138,6 +141,22 @@ void touching(touchPosition touch)
         }
 }
 
+void winCountShow()
+{
+        C2D_Text text;
+        C2D_TextBuf buf = C2D_TextBufNew(4096);
+        char buffer[100];
+        sprintf(buffer, "X wins: %d", winCount[0]);
+        C2D_TextParse(&text, buf, buffer);
+        C2D_TextOptimize(&text);
+        C2D_DrawText(&text, C2D_WithColor, 305, 20, 0, 0.5f, 0.5f, C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF));
+        sprintf(buffer, "O wins: %d", winCount[1]);
+        C2D_TextParse(&text, buf, buffer);
+        C2D_TextOptimize(&text);
+        C2D_DrawText(&text, C2D_WithColor, 305, 40, 0, 0.5f, 0.5f, C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF));
+        C2D_TextBufDelete(buf);
+}
+
 void checkWin()
 {
         if(pressedSquares[0] == pressedSquares[1] && pressedSquares[1] == pressedSquares[2] && pressedSquares[0] != 0)
@@ -171,6 +190,10 @@ void checkWin()
         else if(pressedSquares[2] == pressedSquares[4] && pressedSquares[4] == pressedSquares[6] && pressedSquares[2] != 0)
         {
                 win = true;
+        }
+        else
+        {
+                return;
         }
         
 }
@@ -219,6 +242,7 @@ int main(int argc, char **argv) {
                         drawGridTopScreen();
                         drawWhoseMove();
                         drawMoves(1);
+                        winCountShow();
                         C2D_SceneBegin(bottom);
                         drawGridBottomScreen();
                         drawMoves(2);
@@ -238,13 +262,23 @@ int main(int argc, char **argv) {
                                 {
                                         C2D_TextParse(&text, buf, "O wins!");
                                         C2D_TextOptimize(&text);
-                                        C2D_DrawText(&text, C2D_WithColor, 10, 200, 0, 0.5f, 0.5f, C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF));
+                                        C2D_DrawText(&text, C2D_WithColor, 10, 10, 0, 3.5f, 3.5f, C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF));
+                                        if(!addedWin)
+                                        {
+                                                winCount[1]++;
+                                                addedWin = true;
+                                        }
                                 }
                                 else
                                 {
                                         C2D_TextParse(&text, buf, "X wins!");
                                         C2D_TextOptimize(&text);
-                                        C2D_DrawText(&text, C2D_WithColor, 10, 200, 0, 0.5f, 0.5f, C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF));
+                                        C2D_DrawText(&text, C2D_WithColor, 10, 10, 0, 3.5f, 3.5f, C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF));
+                                        if(!addedWin)
+                                        {
+                                                winCount[0]++;
+                                                addedWin = true;
+                                        }
                                 }
                                 C2D_TextBufDelete(buf);
                                 C2D_SceneBegin(bottom);
@@ -256,7 +290,7 @@ int main(int argc, char **argv) {
                                 C2D_TextBuf buf = C2D_TextBufNew(4096);
                                 C2D_TextParse(&text, buf, "Draw!");
                                 C2D_TextOptimize(&text);
-                                C2D_DrawText(&text, C2D_WithColor, 10, 200, 0, 0.5f, 0.5f, C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF));
+                                C2D_DrawText(&text, C2D_WithColor, 10, 10, 0, 3.5f, 3.5f, C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF));
                                 C2D_TextBufDelete(buf);
                                 C2D_SceneBegin(bottom);
                         }
