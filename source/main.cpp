@@ -7,6 +7,7 @@
 
 int player = 1; //1 - X 2 - O
 bool win = false;
+bool all9 = false;
 int pressedSquares[9] = {0,0,0,0,0,0,0,0,0};
 
 C3D_RenderTarget* top;
@@ -174,6 +175,18 @@ void checkWin()
         
 }
 
+void checkAll9()
+{
+        for(int i = 0; i < 9; i++)
+        {
+                if(pressedSquares[i] == 0)
+                {
+                        return;
+                }
+        }
+        all9 = true;
+}
+
 int main(int argc, char **argv) {
 
 	romfsInit();
@@ -200,7 +213,7 @@ int main(int argc, char **argv) {
                 C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
                 C2D_TargetClear(top, C2D_Color32(0x00, 0x00, 0x00, 0xFF));
                 C2D_TargetClear(bottom, C2D_Color32(0x09, 0x00, 0x00, 0xFF));
-                if(!win)
+                if(!win && !all9)
                 {
                         C2D_SceneBegin(top);
                         drawGridTopScreen();
@@ -216,27 +229,42 @@ int main(int argc, char **argv) {
                 }
                 else
                 {
-                        C2D_SceneBegin(top);
-                        C2D_Text text;
-                        C2D_TextBuf buf = C2D_TextBufNew(4096);
-                        if(player == 1)
+                        if(win)
                         {
-                                C2D_TextParse(&text, buf, "O wins!");
+                                C2D_SceneBegin(top);
+                                C2D_Text text;
+                                C2D_TextBuf buf = C2D_TextBufNew(4096);
+                                if(player == 1)
+                                {
+                                        C2D_TextParse(&text, buf, "O wins!");
+                                        C2D_TextOptimize(&text);
+                                        C2D_DrawText(&text, C2D_WithColor, 10, 200, 0, 0.5f, 0.5f, C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF));
+                                }
+                                else
+                                {
+                                        C2D_TextParse(&text, buf, "X wins!");
+                                        C2D_TextOptimize(&text);
+                                        C2D_DrawText(&text, C2D_WithColor, 10, 200, 0, 0.5f, 0.5f, C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF));
+                                }
+                                C2D_TextBufDelete(buf);
+                                C2D_SceneBegin(bottom);
+                        }
+                        else if(all9)
+                        {
+                                C2D_SceneBegin(top);
+                                C2D_Text text;
+                                C2D_TextBuf buf = C2D_TextBufNew(4096);
+                                C2D_TextParse(&text, buf, "Draw!");
                                 C2D_TextOptimize(&text);
                                 C2D_DrawText(&text, C2D_WithColor, 10, 200, 0, 0.5f, 0.5f, C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF));
+                                C2D_TextBufDelete(buf);
+                                C2D_SceneBegin(bottom);
                         }
-                        else
-                        {
-                                C2D_TextParse(&text, buf, "X wins!");
-                                C2D_TextOptimize(&text);
-                                C2D_DrawText(&text, C2D_WithColor, 10, 200, 0, 0.5f, 0.5f, C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF));
-                        }
-                        C2D_TextBufDelete(buf);
-                        C2D_SceneBegin(bottom);
                         //press A to restart
                         if(kHeld & KEY_A)
                         {
                                 player = 1;
+                                all9 = false;
                                 win = false;
                                 for(int i = 0; i < 9; i++)
                                 {
