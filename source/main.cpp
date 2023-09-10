@@ -57,6 +57,36 @@ void drawWhoseMove()
         C2D_TextBufDelete(buf);
 }
 
+void drawMoves(int display)
+{
+        for(int square = 0; square < 9; square++)
+        {
+                if(pressedSquares[square] == 1)
+                {
+                        if(display == 1)
+                        {
+                                C2D_DrawLine(10 + (square % 3) * 100, 10 + (square / 3) * 60, C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF), 90 + (square % 3) * 100, 50 + (square / 3) * 60, C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF), 2, 0);
+                                C2D_DrawLine(90 + (square % 3) * 100, 10 + (square / 3) * 60, C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF), 10 + (square % 3) * 100, 50 + (square / 3) * 60, C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF), 2, 0);
+                        }
+                        else
+                        {
+                                C2D_DrawLine(10 + (square % 3) * 106, 10 + (square / 3) * 80, C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF), 96 + (square % 3) * 106, 70 + (square / 3) * 80, C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF), 2, 0);
+                                C2D_DrawLine(96 + (square % 3) * 106, 10 + (square / 3) * 80, C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF), 10 + (square % 3) * 106, 70 + (square / 3) * 80, C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF), 2, 0);
+                        }
+                }
+                else if(pressedSquares[square] == 2)
+                {
+                        if(display == 1)
+                        {
+                                C2D_DrawCircleSolid(50 + (square % 3) * 100, 30 + (square / 3) * 60, 0, 25, C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF));
+                        }
+                        else
+                        {
+                                C2D_DrawCircleSolid(53 + (square % 3) * 106, 40 + (square / 3) * 80, 0, 25, C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF));
+                        }
+                }
+        }
+}
 
 void touching(touchPosition touch)
 {
@@ -135,10 +165,14 @@ int main(int argc, char **argv) {
                 C2D_SceneBegin(top);
                 drawGridTopScreen();
                 drawWhoseMove();
+                drawMoves(1);
                 C2D_TargetClear(bottom, C2D_Color32(0x09, 0x00, 0x00, 0xFF));
                 C2D_SceneBegin(bottom);
                 drawGridBottomScreen();
-                touching(touch);
+                drawMoves(2);
+                //check if touched
+                if(touch.px != 0 && touch.py != 0)
+                        touching(touch);
 		C3D_FrameEnd(0);
         }
         C2D_Fini();
