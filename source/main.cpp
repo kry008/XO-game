@@ -54,8 +54,57 @@ void drawWhoseMove()
                 C2D_TextOptimize(&text);
                 C2D_DrawText(&text, C2D_WithColor, 10, 200, 0, 0.5f, 0.5f, C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF));
         }
-        
         C2D_TextBufDelete(buf);
+}
+
+
+void touching(touchPosition touch)
+{
+        if(touch.px < 106 && touch.py < 80 && pressedSquares[0] == 0)
+        {
+                pressedSquares[0] = player;
+                player = player == 1 ? 2 : 1;
+        }
+        else if(touch.px < 212 && touch.px > 80 && touch.py < 80 && pressedSquares[1] == 0)
+        {
+                pressedSquares[1] = player;
+                player = player == 1 ? 2 : 1;
+        }
+        else if(touch.px < 320 && touch.px > 212 && touch.py < 80 && pressedSquares[2] == 0)
+        {
+                pressedSquares[2] = player;
+                player = player == 1 ? 2 : 1;
+        }
+        else if(touch.px < 106 && touch.py < 160 && touch.py > 80 && pressedSquares[3] == 0)
+        {
+                pressedSquares[3] = player;
+                player = player == 1 ? 2 : 1;
+        }
+        else if(touch.px < 212 && touch.px > 80 && touch.py < 160 && touch.py > 80 && pressedSquares[4] == 0)
+        {
+                pressedSquares[4] = player;
+                player = player == 1 ? 2 : 1;
+        }
+        else if(touch.px < 320 && touch.px > 212 && touch.py < 160 && touch.py > 80 && pressedSquares[5] == 0)
+        {
+                pressedSquares[5] = player;
+                player = player == 1 ? 2 : 1;
+        }
+        else if(touch.px < 106 && touch.py < 240 && touch.py > 160 && pressedSquares[6] == 0)
+        {
+                pressedSquares[6] = player;
+                player = player == 1 ? 2 : 1;
+        }
+        else if(touch.px < 212 && touch.px > 80 && touch.py < 240 && touch.py > 160 && pressedSquares[7] == 0)
+        {
+                pressedSquares[7] = player;
+                player = player == 1 ? 2 : 1;
+        }
+        else if(touch.px < 320 && touch.px > 212 && touch.py < 240 && touch.py > 160 && pressedSquares[8] == 0)
+        {
+                pressedSquares[8] = player;
+                player = player == 1 ? 2 : 1;
+        }
 }
 
 int main(int argc, char **argv) {
@@ -84,12 +133,12 @@ int main(int argc, char **argv) {
                 C3D_FrameBegin(C3D_FRAME_SYNCDRAW);
                 C2D_TargetClear(top, C2D_Color32(0x00, 0x00, 0x00, 0xFF));
                 C2D_SceneBegin(top);
-
                 drawGridTopScreen();
                 drawWhoseMove();
                 C2D_TargetClear(bottom, C2D_Color32(0x09, 0x00, 0x00, 0xFF));
                 C2D_SceneBegin(bottom);
                 drawGridBottomScreen();
+                touching(touch);
 		C3D_FrameEnd(0);
         }
         C2D_Fini();
