@@ -249,6 +249,7 @@ int main(int argc, char **argv) {
                         //check if touched
                         if(touch.px != 0 && touch.py != 0)
                                 touching(touch);
+                        checkAll9();
                         checkWin();
                 }
                 else
