@@ -44,3 +44,8 @@ source/main.c.old
 
 
 *.lst
+
+#MAC OS
+.DS_Store
+.AppleDouble
+.LSOverride
