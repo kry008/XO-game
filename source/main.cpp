@@ -156,7 +156,6 @@ void winCountShow()
         C2D_TextParse(&text, buf, buffer);
         C2D_TextOptimize(&text);
         C2D_DrawText(&text, C2D_WithColor, 305, 40, 0, 0.5f, 0.5f, C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF));
-        C2D_TextBufDelete(buf);
         sprintf(buffer, "Draws: %d", winCount[2]);
         C2D_TextParse(&text, buf, buffer);
         C2D_TextOptimize(&text);
