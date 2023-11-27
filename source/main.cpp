@@ -9,7 +9,7 @@ int player = 1; //1 - X 2 - O
 bool win = false;
 bool all9 = false;
 int pressedSquares[9] = {0,0,0,0,0,0,0,0,0};
-int winCount[2] = {0,0};
+int winCount[3] = {0,0,0}; //0 - X 1 - O 2 - Draw
 bool addedWin = false;
 
 C3D_RenderTarget* top;
@@ -82,10 +82,12 @@ void drawMoves(int display)
                         if(display == 1)
                         {
                                 C2D_DrawCircleSolid(50 + (square % 3) * 100, 30 + (square / 3) * 60, 0, 25, C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF));
+                                C2D_DrawCircleSolid(50 + (square % 3) * 100, 30 + (square / 3) * 60, 0, 20, C2D_Color32(0x00, 0x00, 0x00, 0xFF));
                         }
                         else
                         {
                                 C2D_DrawCircleSolid(53 + (square % 3) * 106, 40 + (square / 3) * 80, 0, 25, C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF));
+                                C2D_DrawCircleSolid(53 + (square % 3) * 106, 40 + (square / 3) * 80, 0, 20, C2D_Color32(0x00, 0x00, 0x00, 0xFF));
                         }
                 }
         }
@@ -155,6 +157,11 @@ void winCountShow()
         C2D_TextOptimize(&text);
         C2D_DrawText(&text, C2D_WithColor, 305, 40, 0, 0.5f, 0.5f, C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF));
         C2D_TextBufDelete(buf);
+        sprintf(buffer, "Draws: %d", winCount[2]);
+        C2D_TextParse(&text, buf, buffer);
+        C2D_TextOptimize(&text);
+        C2D_DrawText(&text, C2D_WithColor, 305, 60, 0, 0.5f, 0.5f, C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF));
+        C2D_TextBufDelete(buf);
 }
 
 void checkWin()
@@ -208,6 +215,7 @@ void checkAll9()
                 }
         }
         all9 = true;
+        winCount[2]++;
 }
 
 int main(int argc, char **argv) {
