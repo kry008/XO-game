@@ -35,7 +35,6 @@
 *.3dsx
 *.elf
 *.cia
-*.smdh
 
 build/
 source/*.old
@@ -49,3 +48,6 @@ source/main.c.old
 .DS_Store
 .AppleDouble
 .LSOverride
+makerom
+bannertool
+XO-game.*

@@ -4,6 +4,9 @@
 #include <stdlib.h>
 #include <citro2d.h>
 
+//File io
+
+
 
 int player = 1; //1 - X 2 - O
 bool win = false;
@@ -289,7 +292,7 @@ int main(int argc, char **argv) {
                                         }
                                 }
                                 C2D_TextBufDelete(buf);
-                                C2D_SceneBegin(bottom);
+                                
                         }
                         else if(all9)
                         {
@@ -300,8 +303,8 @@ int main(int argc, char **argv) {
                                 C2D_TextOptimize(&text);
                                 C2D_DrawText(&text, C2D_WithColor, 10, 10, 0, 3.5f, 3.5f, C2D_Color32(0xFF, 0xFF, 0xFF, 0xFF));
                                 C2D_TextBufDelete(buf);
-                                C2D_SceneBegin(bottom);
                         }
+                        C2D_SceneBegin(bottom);
                         //press A to restart
                         if(kHeld & KEY_A)
                         {
